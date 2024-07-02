@@ -21,7 +21,7 @@ class SunatService
 
         $see = new See();
         $see->setCertificate($Certificado); // Aquí ya no necesitas usar file_get_contents
-        $see->setService($company->production ? SunatEndpoints::FE_BETA :  SunatEndpoints::FE_BETA);
-        $see->setClaveSOL($company->ruc, $company->sol_user, $company->sol_pass);
+        $see->setService($company->production ? SunatEndpoints::FE_PRODUCCION :  SunatEndpoints::FE_BETA);
+        $see->setClaveSOL($company->ruc, $company->sol_user, $company->sol_pass);return $see;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Compania;
+use App\Services\SunatService;
 use DateTime;
 use Greenter\Model\Client\Client;
 use Greenter\Model\Company\Company;
@@ -22,22 +23,8 @@ class InvoiceController extends Controller
     public function send(Request $request)
     {
         $company = Compania::first();
-    
-        // Asegúrate de que la ruta al archivo de certificado sea correcta
-        $certPath = $company->cert_path;
-    
-        if (!Storage::exists($certPath)) {
-            return response()->json(['message' => 'El archivo de certificado no existe en la ruta especificada.'], 404);
-        }
-    
-        // Leer el contenido del certificado usando el sistema de almacenamiento de Laravel
-        $Certificado = Storage::get($certPath);
-    
-        $see = new See();
-        $see->setCertificate($Certificado); // Aquí ya no necesitas usar file_get_contents
-        $see->setService(SunatEndpoints::FE_BETA);
-        $see->setClaveSOL($company->ruc, $company->sol_user, $company->sol_pass);
-    
+        $sunat = new SunatService();
+        $See = $sunat->getSee($company);
         // Cliente
         $client = (new Client())
             ->setTipoDoc('6')
